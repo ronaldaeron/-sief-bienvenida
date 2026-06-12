@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SIEF — Servicio de Información y Estadísticas Forestales</title>
+<style>
+  :root{
+    --canopy:#0f3d2e;      /* verde dosel profundo */
+    --canopy-2:#1a5c44;    /* verde medio */
+    --leaf:#3f9c6d;        /* verde hoja */
+    --bark:#6b4423;        /* corteza / tierra */
+    --ember:#d8772f;       /* brasa — acento de riesgo/fuego */
+    --paper:#f6f4ee;       /* fondo claro */
+    --paper-2:#ece8dd;
+    --ink:#15211c;         /* texto principal */
+    --muted:#54635c;       /* texto secundario */
+    --line:#d9d3c5;
+    --white:#ffffff;
+    --display:"Georgia","Times New Roman",serif;
+    --body:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  }
+
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    font-family:var(--body);
+    color:var(--ink);
+    background:var(--paper);
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+  }
+  a{color:inherit}
+
+  /* ====== BARRA INSTITUCIONAL ====== */
+  .gob-bar{
+    background:var(--canopy);
+    color:#cfe3d8;
+    font-size:.72rem;
+    letter-spacing:.04em;
+    text-transform:uppercase;
+    padding:.5rem 1.5rem;
+    text-align:center;
+  }
+
+  /* ====== ENCABEZADO / LOGOS ====== */
+  header.masthead{
+    background:var(--white);
+    border-bottom:1px solid var(--line);
+    padding:1.1rem 1.5rem;
+  }
+  .masthead-inner{
+    max-width:1200px;margin:0 auto;
+    display:flex;align-items:center;gap:1.2rem;flex-wrap:wrap;
+    justify-content:space-between;
+  }
+  .brand{display:flex;align-items:center;gap:1rem;min-width:280px}
+  .brand img{height:62px;width:auto;object-fit:contain}
+  .brand-text{line-height:1.2}
+  .brand-text .min{
+    font-size:.7rem;color:var(--muted);text-transform:uppercase;
+    letter-spacing:.05em;font-weight:600;
+  }
+  .brand-text .vice{
+    font-size:.74rem;color:var(--canopy-2);font-weight:600;margin-top:2px;
+    max-width:340px;
+  }
+  .partners{display:flex;align-items:center;gap:1.1rem;flex-wrap:wrap}
+  .partners img{height:34px;width:auto;object-fit:contain;
+    filter:grayscale(.15);opacity:.92}
+
+  /* ====== HERO ====== */
+  .hero{
+    position:relative;
+    background:
+      linear-gradient(180deg, rgba(15,61,46,.92) 0%, rgba(15,61,46,.78) 100%),
+      radial-gradient(circle at 78% 18%, rgba(216,119,47,.28), transparent 42%),
+      var(--canopy);
+    color:#eaf3ee;
+    overflow:hidden;
+  }
+  /* anillos de crecimiento — firma visual */
+  .rings{
+    position:absolute;right:-180px;top:50%;transform:translateY(-50%);
+    width:640px;height:640px;pointer-events:none;opacity:.35;
+  }
+  .rings circle{fill:none;stroke:#9fcdb6;stroke-width:1}
+  .hero-inner{
+    max-width:1200px;margin:0 auto;
+    padding:4.2rem 1.5rem 3.6rem;
+    position:relative;z-index:2;
+  }
+  .eyebrow{
+    display:inline-block;
+    font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;
+    color:var(--ember);font-weight:700;margin-bottom:1.1rem;
+    border-left:3px solid var(--ember);padding-left:.7rem;
+  }
+  .hero h1{
+    font-family:var(--display);
+    font-weight:700;
+    font-size:clamp(2.1rem,5vw,3.6rem);
+    line-height:1.08;
+    letter-spacing:-.01em;
+    max-width:18ch;
+    margin-bottom:1.1rem;
+  }
+  .hero h1 em{color:#9fe0bd;font-style:normal}
+  .hero p.lead{
+    font-size:clamp(1rem,1.6vw,1.18rem);
+    max-width:60ch;color:#cfe3d8;margin-bottom:2rem;
+  }
+  .hero-meta{
+    display:flex;gap:2.2rem;flex-wrap:wrap;
+    border-top:1px solid rgba(159,205,182,.3);
+    padding-top:1.4rem;max-width:720px;
+  }
+  .hero-meta div{min-width:120px}
+  .hero-meta .k{
+    font-family:var(--display);font-size:1.7rem;color:#fff;line-height:1;
+  }
+  .hero-meta .l{font-size:.74rem;color:#a9c7ba;text-transform:uppercase;
+    letter-spacing:.06em;margin-top:.35rem}
+
+  /* ====== SELECTOR DE SERVICIOS ====== */
+  .services{
+    max-width:1200px;margin:0 auto;
+    padding:3.4rem 1.5rem;
+  }
+  .services-head{margin-bottom:1.8rem}
+  .services-head .tag{
+    font-size:.72rem;letter-spacing:.18em;text-transform:uppercase;
+    color:var(--leaf);font-weight:700;
+  }
+  .services-head h2{
+    font-family:var(--display);font-size:clamp(1.5rem,3vw,2.1rem);
+    color:var(--ink);margin-top:.4rem;font-weight:700;
+  }
+  .services-head p{color:var(--muted);max-width:62ch;margin-top:.5rem}
+
+  .service-grid{
+    display:grid;grid-template-columns:repeat(2,1fr);gap:1.4rem;
+  }
+  .card{
+    position:relative;
+    background:var(--white);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:2rem 1.8rem 1.7rem;
+    text-decoration:none;color:var(--ink);
+    display:flex;flex-direction:column;
+    transition:transform .25s ease, box-shadow .25s ease, border-color .25s ease;
+    overflow:hidden;
+  }
+  .card::before{
+    content:"";position:absolute;left:0;top:0;bottom:0;width:5px;
+  }
+  .card.bosques::before{background:linear-gradient(var(--canopy-2),var(--leaf))}
+  .card.tierras::before{background:linear-gradient(var(--bark),var(--ember))}
+  .card:hover{
+    transform:translateY(-5px);
+    box-shadow:0 18px 40px -22px rgba(15,61,46,.55);
+    border-color:transparent;
+  }
+  .card .ic{
+    width:52px;height:52px;border-radius:12px;
+    display:flex;align-items:center;justify-content:center;
+    margin-bottom:1.1rem;
+  }
+  .card.bosques .ic{background:rgba(63,156,109,.14)}
+  .card.tierras .ic{background:rgba(216,119,47,.14)}
+  .card .ic svg{width:28px;height:28px}
+  .card .num{
+    position:absolute;top:1.3rem;right:1.5rem;
+    font-family:var(--display);font-size:2.4rem;color:var(--paper-2);
+    line-height:1;font-weight:700;
+  }
+  .card h3{
+    font-family:var(--display);font-size:1.45rem;margin-bottom:.5rem;
+    font-weight:700;
+  }
+  .card .sub{
+    font-size:.76rem;text-transform:uppercase;letter-spacing:.08em;
+    color:var(--muted);font-weight:600;margin-bottom:.9rem;
+  }
+  .card p.desc{color:var(--muted);font-size:.95rem;margin-bottom:1.3rem;flex:1}
+  .chips{display:flex;flex-wrap:wrap;gap:.45rem;margin-bottom:1.4rem}
+  .chip{
+    font-size:.73rem;padding:.3rem .65rem;border-radius:999px;
+    background:var(--paper-2);color:var(--canopy-2);font-weight:600;
+  }
+  .card.tierras .chip{color:var(--bark)}
+  .enter{
+    display:inline-flex;align-items:center;gap:.5rem;
+    font-weight:700;font-size:.92rem;color:var(--canopy-2);
+  }
+  .card.tierras .enter{color:var(--ember)}
+  .enter svg{width:18px;height:18px;transition:transform .2s ease}
+  .card:hover .enter svg{transform:translateX(4px)}
+
+  /* ====== FRANJA DE CAPACIDADES ====== */
+  .caps{background:var(--paper-2);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+  .caps-inner{max-width:1200px;margin:0 auto;padding:2.8rem 1.5rem;
+    display:grid;grid-template-columns:repeat(4,1fr);gap:1.6rem}
+  .cap h4{font-size:.95rem;color:var(--canopy);margin-bottom:.4rem;
+    display:flex;align-items:center;gap:.5rem}
+  .cap h4 span{width:8px;height:8px;border-radius:50%;background:var(--leaf);flex:none}
+  .cap p{font-size:.86rem;color:var(--muted)}
+
+  /* ====== ACCESO / CTA ====== */
+  .access{max-width:1200px;margin:0 auto;padding:3rem 1.5rem 1rem}
+  .access h2{font-family:var(--display);font-size:1.4rem;margin-bottom:1.2rem;color:var(--ink)}
+  .quick{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem}
+  .quick a{
+    background:var(--white);border:1px solid var(--line);border-radius:10px;
+    padding:1rem 1.1rem;text-decoration:none;color:var(--ink);
+    font-size:.9rem;font-weight:600;display:flex;align-items:center;gap:.7rem;
+    transition:border-color .2s, background .2s;
+  }
+  .quick a:hover{border-color:var(--leaf);background:#fff}
+  .quick a .d{width:9px;height:9px;border-radius:2px;background:var(--ember);flex:none}
+
+  /* ====== TÉRMINOS ====== */
+  .terms{max-width:1200px;margin:0 auto;padding:2.4rem 1.5rem}
+  .terms-box{
+    background:var(--white);border:1px solid var(--line);border-radius:12px;
+    padding:1.8rem;font-size:.86rem;color:var(--muted)
+  }
+  .terms-box h3{font-family:var(--display);color:var(--ink);font-size:1.15rem;margin-bottom:1rem}
+  .terms-box dl{display:grid;grid-template-columns:auto 1fr;gap:.55rem 1.2rem}
+  .terms-box dt{font-weight:700;color:var(--canopy-2);white-space:nowrap}
+  .terms-box dd{margin:0}
+
+  /* ====== PIE ====== */
+  footer{background:var(--canopy);color:#cfe3d8;margin-top:1.5rem}
+  .foot-partners{
+    border-bottom:1px solid rgba(159,205,182,.22);
+    padding:1.6rem 1.5rem;
+  }
+  .foot-partners .fp-inner{max-width:1200px;margin:0 auto;
+    display:flex;align-items:center;justify-content:center;gap:2rem;flex-wrap:wrap}
+  .foot-partners img{height:30px;width:auto;object-fit:contain;
+    filter:brightness(0) invert(1);opacity:.78}
+  .foot-main{max-width:1200px;margin:0 auto;padding:2.2rem 1.5rem;
+    display:flex;justify-content:space-between;gap:2rem;flex-wrap:wrap;font-size:.84rem}
+  .foot-main .dir img{height:46px;margin-bottom:.6rem}
+  .foot-main strong{color:#fff}
+  .foot-main a{color:#9fe0bd;text-decoration:none}
+  .foot-bottom{border-top:1px solid rgba(159,205,182,.22);
+    padding:1rem 1.5rem;text-align:center;font-size:.74rem;color:#88a99b}
+
+  /* ====== RESPONSIVO ====== */
+  @media (max-width:880px){
+    .service-grid{grid-template-columns:1fr}
+    .caps-inner{grid-template-columns:repeat(2,1fr)}
+    .quick{grid-template-columns:repeat(2,1fr)}
+    .rings{opacity:.18}
+    .partners{display:none}
+  }
+  @media (max-width:560px){
+    .caps-inner{grid-template-columns:1fr}
+    .quick{grid-template-columns:1fr}
+    .hero-meta{gap:1.4rem}
+  }
+  @media (prefers-reduced-motion:reduce){
+    *{transition:none!important;scroll-behavior:auto}
+  }
+</style>
+</head>
+<body>
+
+  <!-- Barra institucional -->
+  <div class="gob-bar">
+    Estado Plurinacional de Bolivia · Ministerio de Planificación del Desarrollo y Medio Ambiente
+  </div>
+
+  <!-- Encabezado con logos -->
+  <header class="masthead">
+    <div class="masthead-inner">
+      <div class="brand">
+        <img src="https://simb.planificacion.gob.bo/simb/resources/images/logo3.png"
+             alt="Escudo institucional" onerror="this.style.display='none'">
+        <div class="brand-text">
+          <div class="min">Ministerio de Planificación del Desarrollo y Medio Ambiente</div>
+          <div class="vice">Viceministerio de Medio Ambiente, Biodiversidad, Cambios Climáticos y Gestión de Desarrollo Forestal · Dirección General de Gestión y Desarrollo Forestal</div>
+        </div>
+      </div>
+      <div class="partners">
+        <img src="https://simb.planificacion.gob.bo/simb/resources/images/logo-abtw.png" alt="ABT" onerror="this.style.display='none'">
+        <img src="https://simb.planificacion.gob.bo/simb/resources/images/sernap.png" alt="SERNAP" onerror="this.style.display='none'">
+        <img src="https://simb.planificacion.gob.bo/simb/resources/images/logo-senamhi.png" alt="SENAMHI" onerror="this.style.display='none'">
+        <img src="https://simb.planificacion.gob.bo/simb/resources/images/logo_simb.png" alt="SIEF" onerror="this.style.display='none'">
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <section class="hero">
+    <svg class="rings" viewBox="0 0 640 640" aria-hidden="true">
+      <circle cx="320" cy="320" r="60"/>
+      <circle cx="320" cy="320" r="110"/>
+      <circle cx="320" cy="320" r="165"/>
+      <circle cx="320" cy="320" r="225"/>
+      <circle cx="320" cy="320" r="290"/>
+    </svg>
+    <div class="hero-inner">
+      <span class="eyebrow">Plataforma oficial · Geovisor nacional</span>
+      <h1>Servicio de Información y <em>Estadísticas Forestales</em></h1>
+      <p class="lead">
+        El punto de acceso único al monitoreo geográfico y estadístico del patrimonio
+        forestal de Bolivia. Integra dos servicios complementarios bajo una misma
+        infraestructura: el seguimiento de la cobertura boscosa y la administración
+        de las tierras forestales del Estado.
+      </p>
+      <div class="hero-meta">
+        <div><div class="k">2</div><div class="l">Servicios integrados</div></div>
+        <div><div class="k">9</div><div class="l">Departamentos<br>cubiertos</div></div>
+        <div><div class="k">22</div><div class="l">Áreas protegidas<br>nacionales</div></div>
+        <div><div class="k">24/7</div><div class="l">Monitoreo de<br>focos de calor</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Servicios -->
+  <section class="services">
+    <div class="services-head">
+      <span class="tag">Elija un servicio para ingresar</span>
+      <h2>Dos servicios, una sola plataforma</h2>
+      <p>El SIEF reorganiza la información forestal del país en dos servicios especializados. Seleccione el que corresponda a su consulta.</p>
+    </div>
+
+    <div class="service-grid">
+
+      <!-- BOSQUES -->
+      <a class="card bosques" href="#bosques">
+        <span class="num">01</span>
+        <div class="ic">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#1a5c44" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 22v-5"/>
+            <path d="M9 7l3-5 3 5"/>
+            <path d="M7 12l5-7 5 7"/>
+            <path d="M5 17l7-9 7 9"/>
+          </svg>
+        </div>
+        <h3>Servicio de Bosques</h3>
+        <div class="sub">Cobertura · Dinámica · Riesgos forestales</div>
+        <p class="desc">
+          Monitoreo continuo del estado de los bosques: cobertura boscosa, deforestación,
+          forestación y reforestación, focos de calor y cicatrices de quemas con
+          sensores multiresolución.
+        </p>
+        <div class="chips">
+          <span class="chip">Cobertura boscosa</span>
+          <span class="chip">Deforestación</span>
+          <span class="chip">Focos de calor</span>
+          <span class="chip">Cicatrices de quemas</span>
+          <span class="chip">MRV</span>
+        </div>
+        <span class="enter">
+          Ingresar al servicio
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </span>
+      </a>
+
+      <!-- TIERRAS FORESTALES -->
+      <a class="card tierras" href="#tierras">
+        <span class="num">02</span>
+        <div class="ic">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#6b4423" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 7l9-4 9 4-9 4-9-4z"/>
+            <path d="M3 7v6l9 4 9-4V7"/>
+            <path d="M3 13v4l9 4 9-4v-4"/>
+          </svg>
+        </div>
+        <h3>Servicio de Tierras Forestales</h3>
+        <div class="sub">Ordenamiento · Tenencia · Uso del suelo</div>
+        <p class="desc">
+          Administración geográfica y estadística de las tierras de vocación forestal:
+          reservas forestales, predios saneados, territorios indígenas, permisos de
+          aprovechamiento y planes de gestión territorial.
+        </p>
+        <div class="chips">
+          <span class="chip">Reservas forestales</span>
+          <span class="chip">TIOC / TCO</span>
+          <span class="chip">Uso de suelo</span>
+          <span class="chip">PGMF · PGBIT</span>
+          <span class="chip">Marco normativo</span>
+        </div>
+        <span class="enter">
+          Ingresar al servicio
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </span>
+      </a>
+
+    </div>
+  </section>
+
+  <!-- Capacidades -->
+  <section class="caps">
+    <div class="caps-inner">
+      <div class="cap">
+        <h4><span></span>Interoperabilidad</h4>
+        <p>Conexión directa con bases de datos de otros sistemas del Estado Plurinacional.</p>
+      </div>
+      <div class="cap">
+        <h4><span></span>Servicios climáticos</h4>
+        <p>Integración de datos meteorológicos (SENAMHI) para alertas tempranas.</p>
+      </div>
+      <div class="cap">
+        <h4><span></span>Análisis espacial</h4>
+        <p>Filtros geográficos y evolución temporal de incendios y cobertura.</p>
+      </div>
+      <div class="cap">
+        <h4><span></span>Repositorio forestal</h4>
+        <p>Descargas estadísticas, mapas de uso de suelo y marco normativo vigente.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Acceso rápido -->
+  <section class="access">
+    <h2>Acceso rápido</h2>
+    <div class="quick">
+      <a href="#"><span class="d"></span>Reportes estadísticos</a>
+      <a href="#"><span class="d"></span>Repositorio sector forestal</a>
+      <a href="#"><span class="d"></span>Plan de Prevención de Incendios 2026</a>
+      <a href="#"><span class="d"></span>MapBiomas Bolivia</a>
+    </div>
+  </section>
+
+  <!-- Términos -->
+  <section class="terms">
+    <div class="terms-box">
+      <h3>Términos y condiciones de uso</h3>
+      <dl>
+        <dt>Propósito</dt>
+        <dd>Acceso público a datos vectoriales y estadísticos oficiales del sector forestal.</dd>
+        <dt>Propiedad</dt>
+        <dd>Datos desarrollados por la DGGDF y fuentes institucionales. Se autoriza el uso individual y académico; queda prohibida su comercialización.</dd>
+        <dt>Cita obligatoria</dt>
+        <dd>Todo producto derivado debe citar: «Fuente: Servicio de Información y Estadísticas Forestales (SIEF) — MPDyMA. https://simb.planificacion.gob.bo/».</dd>
+        <dt>Responsabilidad</dt>
+        <dd>El MPDyMA actualiza la información de manera oportuna, pero no se responsabiliza por la interpretación, manipulación externa, alteraciones por terceros o daños tecnológicos derivados del uso de este servidor.</dd>
+      </dl>
+    </div>
+  </section>
+
+  <!-- Pie -->
+  <footer>
+    <div class="foot-partners">
+      <div class="fp-inner">
+        <img src="https://simb.planificacion.gob.bo/simb/resources/images/logo-abtw.png" alt="ABT" onerror="this.style.display='none'">
+        <img src="https://simb.planificacion.gob.bo/simb/resources/images/sernap.png" alt="SERNAP" onerror="this.style.display='none'">
+        <img src="https://simb.planificacion.gob.bo/simb/resources/images/logo-senamhi.png" alt="SENAMHI" onerror="this.style.display='none'">
+        <img src="https://simb.planificacion.gob.bo/simb/resources/images/bid.png" alt="BID" onerror="this.style.display='none'">
+        <img src="https://simb.planificacion.gob.bo/simb/resources/images/logo_otca.png" alt="OTCA" onerror="this.style.display='none'">
+        <img src="https://simb.planificacion.gob.bo/simb/resources/images/unpd.png" alt="PNUD" onerror="this.style.display='none'">
+        <img src="https://simb.planificacion.gob.bo/simb/resources/images/logo-gef.png" alt="GEF" onerror="this.style.display='none'">
+        <img src="https://simb.planificacion.gob.bo/simb/resources/images/logo-faow1.png" alt="FAO" onerror="this.style.display='none'">
+      </div>
+    </div>
+    <div class="foot-main">
+      <div class="dir">
+        <img src="https://simb.planificacion.gob.bo/simb/resources/images/logo_simb.png" alt="SIEF" onerror="this.style.display='none'">
+        <div>
+          <strong>Contacto:</strong> Dirección General de Gestión y Desarrollo Forestal<br>
+          <strong>Dirección:</strong> Av. 14 de Septiembre esq. c. 8, Zona Obrajes<br>
+          <strong>Teléfono:</strong> +591 64210076 / +591 68270078<br>
+          <strong>Email:</strong> dggdf@planificacion.gob.bo · <a href="https://www.planificacion.gob.bo">www.planificacion.gob.bo</a><br>
+          La Paz — Bolivia
+        </div>
+      </div>
+      <div>
+        <strong>Servicios del SIEF</strong><br>
+        Focos de calor<br>
+        Gestión de desarrollo forestal<br>
+        Quemas e incendios forestales<br>
+        Biodiversidad en bosques<br>
+        Tierras forestales
+      </div>
+    </div>
+    <div class="foot-bottom">
+      © 2026 Estado Plurinacional de Bolivia · Ministerio de Planificación del Desarrollo y Medio Ambiente · Servicio de Información y Estadísticas Forestales (SIEF)
+    </div>
+  </footer>
+
+</body>
+</html>
